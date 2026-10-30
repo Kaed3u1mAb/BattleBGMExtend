@@ -1,0 +1,477 @@
+{
+  "base": {
+    "namespace": "",
+    "name": "UnitModel",
+    "methods": [
+      {
+        "name": "GetOriginUnitID",
+        "argc": 0,
+        "static": false,
+        "result": "System.Int32",
+        "params": []
+      }
+    ]
+  },
+  "buf": {
+    "namespace": "",
+    "name": "BuffDetail",
+    "methods": [
+      {
+        "name": "GetActivatedBuffStack",
+        "argc": 2,
+        "static": false,
+        "result": "System.Int32",
+        "params": [
+          "BUFF_UNIQUE_KEYWORD",
+          "System.Boolean"
+        ]
+      },
+      {
+        "name": "HasActivatedBuff",
+        "argc": 2,
+        "static": false,
+        "result": "System.Boolean",
+        "params": [
+          "BUFF_UNIQUE_KEYWORD",
+          "System.Boolean"
+        ]
+      },
+      {
+        "name": "RightAfterGetAnyBuff",
+        "argc": 10,
+        "static": false,
+        "result": "System.Void",
+        "params": [
+          "BattleUnitModel",
+          "BUFF_UNIQUE_KEYWORD",
+          "System.Int32",
+          "System.Int32",
+          "System.Int32",
+          "ABILITY_SOURCE_TYPE",
+          "BATTLE_EVENT_TIMING",
+          "BattleUnitModel",
+          "System.Int32",
+          "System.Int32"
+        ]
+      }
+    ]
+  },
+  "bom": {
+    "namespace": "",
+    "name": "BattleObjectManager",
+    "methods": [
+      {
+        "name": "GetModelList",
+        "argc": 0,
+        "static": false,
+        "result": "System.Collections.Generic.List<BattleUnitModel>",
+        "params": []
+      }
+    ]
+  },
+  "sound": {
+    "namespace": "",
+    "name": "SoundManager",
+    "methods": [
+      {
+        "name": "TryCreateInstance",
+        "argc": 2,
+        "static": false,
+        "result": "System.Boolean",
+        "params": [
+          "System.String",
+          "FMOD.Studio.EventInstance&"
+        ]
+      },
+      {
+        "name": "LoadBankFromLocal",
+        "argc": 3,
+        "static": false,
+        "result": "System.Void",
+        "params": [
+          "System.String",
+          "System.Boolean",
+          "System.Boolean"
+        ]
+      },
+      {
+        "name": "IsLoadedBank",
+        "argc": 1,
+        "static": false,
+        "result": "System.Boolean",
+        "params": [
+          "System.String"
+        ]
+      },
+      {
+        "name": "StopBGM",
+        "argc": 1,
+        "static": false,
+        "result": "System.Void",
+        "params": [
+          "System.Boolean"
+        ]
+      },
+      {
+        "name": "ChangeBGM",
+        "argc": 3,
+        "static": false,
+        "result": "System.Void",
+        "params": [
+          "FMOD.Studio.EventInstance",
+          "System.Boolean",
+          "LimbusCompany.SoundLibs.IBGMData"
+        ]
+      },
+      {
+        "name": "PlaySecondBGM",
+        "argc": 2,
+        "static": false,
+        "result": "System.Void",
+        "params": [
+          "System.Boolean",
+          "FMOD.Studio.EventInstance"
+        ]
+      },
+      {
+        "name": "StopBGM",
+        "argc": 1,
+        "static": false,
+        "result": "System.Void",
+        "params": [
+          "System.Boolean"
+        ]
+      }
+    ]
+  },
+  "utils": {
+    "namespace": "Utils",
+    "name": "UnityUtils",
+    "methods": [
+      {
+        "name": "IsBattleScene",
+        "argc": 0,
+        "static": true,
+        "result": "System.Boolean",
+        "params": []
+      }
+    ]
+  },
+  "rodion": {
+    "namespace": "",
+    "name": "PassiveAbility_1091602",
+    "methods": [
+      {
+        "name": "OnRoundEnd",
+        "argc": 1,
+        "static": false,
+        "result": "System.Void",
+        "params": [
+          "BATTLE_EVENT_TIMING"
+        ]
+      }
+    ]
+  },
+  "rodion_up": {
+    "namespace": "",
+    "name": "PassiveAbility_1091612",
+    "methods": [
+      {
+        "name": "OnRoundEnd",
+        "argc": 1,
+        "static": false,
+        "result": "System.Void",
+        "params": [
+          "BATTLE_EVENT_TIMING"
+        ]
+      }
+    ]
+  },
+  "sc": {
+    "namespace": "",
+    "name": "StageController",
+    "methods": [
+      {
+        "name": "FixedUpdate",
+        "argc": 1,
+        "static": false,
+        "result": "System.Void",
+        "params": [
+          "System.Single"
+        ]
+      },
+      {
+        "name": "StartRound",
+        "argc": 0,
+        "static": false,
+        "result": "System.Void",
+        "params": []
+      },
+      {
+        "name": "StartRoundAfterAbnormalityChoice_Init",
+        "argc": 0,
+        "static": false,
+        "result": "System.Void",
+        "params": []
+      },
+      {
+        "name": "OnEndRound",
+        "argc": 0,
+        "static": false,
+        "result": "System.Void",
+        "params": []
+      },
+      {
+        "name": "OnWaitEndRound",
+        "argc": 0,
+        "static": false,
+        "result": "System.Boolean",
+        "params": []
+      },
+      {
+        "name": "EndStage",
+        "argc": 0,
+        "static": false,
+        "result": "System.Void",
+        "params": []
+      },
+      {
+        "name": "EndStageForcely",
+        "argc": 0,
+        "static": false,
+        "result": "System.Void",
+        "params": []
+      },
+      {
+        "name": "OnStageGiveUp",
+        "argc": 0,
+        "static": false,
+        "result": "System.Void",
+        "params": []
+      },
+      {
+        "name": "Clear",
+        "argc": 0,
+        "static": false,
+        "result": "System.Void",
+        "params": []
+      },
+      {
+        "name": "RetryStage",
+        "argc": 0,
+        "static": false,
+        "result": "System.Void",
+        "params": []
+      },
+      {
+        "name": "StartStageController",
+        "argc": 0,
+        "static": false,
+        "result": "System.Void",
+        "params": []
+      }
+    ]
+  },
+  "events": {
+    "namespace": "UnityEngine.EventSystems",
+    "name": "EventSystem",
+    "methods": [
+      {
+        "name": "Update",
+        "argc": 0,
+        "static": false,
+        "result": "System.Void",
+        "params": []
+      }
+    ]
+  },
+  "generator": {
+    "namespace": "",
+    "name": "SoundGenerator",
+    "methods": [
+      {
+        "name": "ApplyBGMData",
+        "argc": 2,
+        "static": true,
+        "result": "System.Void",
+        "params": [
+          "LimbusCompany.SoundLibs.IBGMData",
+          "System.Boolean"
+        ]
+      }
+    ]
+  },
+  "current": {
+    "namespace": "LimbusCompany.SoundLibs",
+    "name": "CurrentBGM",
+    "methods": [
+      {
+        "name": "ChangeBGM",
+        "argc": 4,
+        "static": false,
+        "result": "System.Void",
+        "params": [
+          "FMOD.Studio.EventInstance",
+          "System.Boolean",
+          "System.Single",
+          "LimbusCompany.SoundLibs.IBGMData"
+        ]
+      },
+      {
+        "name": "StopBGM",
+        "argc": 1,
+        "static": false,
+        "result": "System.Void",
+        "params": [
+          "System.Boolean"
+        ]
+      },
+      {
+        "name": "Release",
+        "argc": 0,
+        "static": false,
+        "result": "System.Void",
+        "params": []
+      },
+      {
+        "name": "TrySetParameter",
+        "argc": 3,
+        "static": false,
+        "result": "System.Boolean",
+        "params": [
+          "System.String",
+          "System.Single",
+          "System.Boolean"
+        ]
+      }
+    ]
+  },
+  "battle": {
+    "namespace": "",
+    "name": "BattleSoundGenerator",
+    "methods": [
+      {
+        "name": "SetChangeBGM",
+        "argc": 1,
+        "static": true,
+        "result": "System.Void",
+        "params": [
+          "System.Int32"
+        ]
+      },
+      {
+        "name": "ResetBGM",
+        "argc": 0,
+        "static": true,
+        "result": "System.Void",
+        "params": []
+      },
+      {
+        "name": "StartBGM",
+        "argc": 2,
+        "static": true,
+        "result": "System.Void",
+        "params": [
+          "System.Int32",
+          "System.Int32"
+        ]
+      },
+      {
+        "name": "StopBGM",
+        "argc": 2,
+        "static": true,
+        "result": "System.Void",
+        "params": [
+          "System.Boolean",
+          "System.Boolean"
+        ]
+      },
+      {
+        "name": "StartAddBGM",
+        "argc": 3,
+        "static": true,
+        "result": "System.Void",
+        "params": [
+          "System.String",
+          "FMOD.Studio.STOP_MODE",
+          "System.Boolean"
+        ]
+      },
+      {
+        "name": "StopAddedBGM",
+        "argc": 2,
+        "static": true,
+        "result": "System.Void",
+        "params": [
+          "FMOD.Studio.STOP_MODE",
+          "System.Boolean"
+        ]
+      },
+      {
+        "name": "TryStartBattleBgmByName",
+        "argc": 1,
+        "static": true,
+        "result": "System.Boolean",
+        "params": [
+          "System.String"
+        ]
+      },
+      {
+        "name": "TryResumeBattleBgm",
+        "argc": 1,
+        "static": true,
+        "result": "System.Boolean",
+        "params": [
+          "System.Int32"
+        ]
+      },
+      {
+        "name": "TryStartInterludeBgmOverride",
+        "argc": 1,
+        "static": true,
+        "result": "System.Boolean",
+        "params": [
+          "System.String"
+        ]
+      },
+      {
+        "name": "TryStartInterludeBgmOverrideByEventPath",
+        "argc": 1,
+        "static": true,
+        "result": "System.Boolean",
+        "params": [
+          "System.String"
+        ]
+      },
+      {
+        "name": "PlayeAbChoiceBGM",
+        "argc": 1,
+        "static": true,
+        "result": "System.Void",
+        "params": [
+          "FMOD.Studio.EventInstance"
+        ]
+      }
+    ]
+  },
+  "passive": {
+    "namespace": "",
+    "name": "PassiveAbility",
+    "methods": []
+  },
+  "unit": {
+    "namespace": "",
+    "name": "BattleUnitModel",
+    "methods": []
+  },
+  "ally": {
+    "namespace": "",
+    "name": "BattleUnitModel_Ally",
+    "methods": []
+  },
+  "keyword": {
+    "namespace": "",
+    "name": "BUFF_UNIQUE_KEYWORD",
+    "methods": []
+  }
+}

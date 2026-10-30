@@ -1,0 +1,10 @@
+build/
+__pycache__/
+*.pyc
+
+# Local credentials, runtime logs and configuration backups
+*.log
+.env
+.env.*
+*.backup-*
+.vs/

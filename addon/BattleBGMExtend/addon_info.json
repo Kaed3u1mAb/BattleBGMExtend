@@ -1,0 +1,12 @@
+{
+  "name": "BattleBGMExtend",
+  "desc": "9 条人格战斗 BGM 规则：Buff、回合开始和转化回合结束触发；数字越大优先级越高，阻止游戏覆盖。",
+  "authors": {
+    "枫海千叶": ""
+  },
+  "version": "0.2.0",
+  "settings": {
+    "enable": true,
+    "自动注入": true
+  }
+}

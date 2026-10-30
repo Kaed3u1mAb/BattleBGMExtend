@@ -1,0 +1,67 @@
+{
+  "gameassembly_sha256": "1f31ecdbee399784e53345c4092f3dadd86e2da735ad930adcab7882d848c326",
+  "localization_date": "2026-10-30",
+  "tracks": {
+    "Battle_Cp10_Boss_10": {
+      "bgm": "Battle_Cp10_Boss_10",
+      "bank": "BGM_Default_S8_3"
+    },
+    "Battle_Cp9_Boss6": {
+      "bgm": "Battle_Cp9_Boss_6",
+      "bank": "BGM_Default_S7_3"
+    },
+    "Battle_Cp9_Boss_10": {
+      "bgm": "Battle_Cp9_Boss_10",
+      "bank": "BGM_Default_S7_3"
+    },
+    "Battle_Cp9_Boss1_2": {
+      "bgm": "Battle_Cp9_Boss_1_2",
+      "bank": "BGM_Default_S7_3"
+    },
+    "Battle_Cp9_Boss3_2": {
+      "bgm": "Battle_Cp9_Boss_3_2",
+      "bank": "BGM_Default_S7_3"
+    },
+    "Battle_Cp9_Boss4_2": {
+      "bgm": "Battle_Cp9_Boss_4_2",
+      "bank": "BGM_Default_S7_3"
+    },
+    "Battle_Cp9_Boss2_2": {
+      "bgm": "Battle_Cp9_Boss_2_2",
+      "bank": "BGM_Default_S7_2"
+    },
+    "Battle_Cp8_Boss_2": {
+      "bgm": "Battle_Cp8_Boss_2",
+      "bank": "BGM_Default_S6_3"
+    },
+    "Battle_Cp9_5_Thread_Boss": {
+      "bgm": "Battle_Cp9_5_Thread_Boss",
+      "bank": "BGM_Default_S7_4"
+    }
+  },
+  "personality_ids": [
+    11016,
+    10415,
+    10115,
+    10916,
+    11115,
+    10614,
+    10314,
+    10512,
+    10915
+  ],
+  "keywords": [
+    "Blandishment_Shin",
+    "FaubismWolfMaskRodion",
+    "FutureEyeOffRodion",
+    "FutureEyeOnRodion",
+    "GoldenOpportunity",
+    "IrritationAlly",
+    "MiddleFatherSwordFourOutis",
+    "SojiRyoshuShin",
+    "StackYisangSpecialSkill",
+    "TransformSinclair"
+  ],
+  "audio_validation": "FMOD NOSOUND output: bank load, event creation and start; all nine succeeded.",
+  "rodion_conversion": "PassiveAbility_1091602._gainedFutureEyeOffThisTurn, captured before PassiveAbility_1091612.OnRoundEnd clears it; current FixedUpdate inlines OnWaitEndRound, so AFTER_ROUND_END phase confirms completion."
+}
