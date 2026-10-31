@@ -289,6 +289,16 @@ static bool preload_bank(unsigned index,void *sound)
  }
  return true;
 }
+/* Cp9 Boss 10 is a parameter-driven score. Ryoshu=0 (Battle_1_0)
+ * runs a silent segment despite FMOD reporting PLAYING. Select the first
+ * audible battle segment, not a boss-script-only default. Other scores keep
+ * their original parameters. Use our native trampoline so an existing lock
+ * cannot intercept initialization of a reused event or a rollback. */
+static bool initialize_score(uintptr_t event,const char *path)
+{
+ if(strcmp(path,"event:/BGM/Battle/Battle_Cp9_Boss_10"))return true;
+ return original_native_parameter(event,"Ryoshu",1.0f,1)==0;
+}
 static bool switch_rule(unsigned index)
 {
  BGM_RULE *r=&rules[index];
@@ -303,7 +313,9 @@ static bool switch_rule(unsigned index)
   if(test_instance)event_release(test_instance);
   char msg[256];snprintf(msg,sizeof(msg),"Cannot create BGM: %s; original music retained.",r->path);report(21,msg);return false;
  }
+ bool initialized=initialize_score(test_instance,r->path);
  event_release(test_instance);
+ if(!initialized){report(21,"Cannot initialize BGM score parameter Ryoshu=1; original music retained.");return false;}
  /* Use the battle player's own additional-BGM registry, callbacks, volume
   * policy and stage cleanup. Its short names are prefixed internally. */
  void *short_name=api.string_new(r->path+18);if(!short_name)return false;
@@ -315,7 +327,7 @@ static bool switch_rule(unsigned index)
  if(ok){bool nofade=false;void *a[]={&nofade};ok=call(m_stop_sound,sound,a,NULL);}
  if(ok)ok=call(m_start_add,NULL,add,NULL);
  uintptr_t event=0;api.static_value(f_battle_current,&event);int playback=2;
- ok=ok&&event&&event_valid(event)&&event_playback(event,&playback)==0&&playback!=2;
+ ok=ok&&event&&event_valid(event)&&initialize_score(event,r->path)&&event_playback(event,&playback)==0&&playback!=2;
  permit(false);
  if(!ok){
   /* A failed switch never raises the priority floor. Release protection and
@@ -324,7 +336,7 @@ static bool switch_rule(unsigned index)
   if(previously_locked&&previous_path[0]){
    void *old_name=api.string_new(previous_path+18);void *a[]={old_name,&mode,&release};
    bool restored=call(m_start_add,NULL,a,NULL);uintptr_t old=0;api.static_value(f_battle_current,&old);
-   restored=restored&&old&&event_valid(old)&&event_playback(old,&playback)==0&&playback!=2;
+   restored=restored&&old&&event_valid(old)&&initialize_score(old,previous_path)&&event_playback(old,&playback)==0&&playback!=2;
    if(restored){owned_instance=old;permit(false);report(21,"Higher-priority BGM failed; previous music lock retained.");return false;}
   }
   cfg->locked=0;cfg->priority=0;cfg->active_rule=-1;cfg->active_bgm[0]=0;owned_instance=0;
@@ -333,7 +345,8 @@ static bool switch_rule(unsigned index)
  }
  owned_instance=event;cfg->locked=1;cfg->priority=r->priority;cfg->active_rule=(int)index;
  snprintf(cfg->active_bgm,sizeof(cfg->active_bgm),"%s",r->path);cfg->changes++;
- char msg[256];snprintf(msg,sizeof(msg),"BGM locked: %s (priority %d)",r->id,r->priority);report(0,msg);return true;
+ char msg[256];snprintf(msg,sizeof(msg),"BGM locked: %s (priority %d); %.100s%s",r->id,r->priority,r->path,
+  !strcmp(r->path,"event:/BGM/Battle/Battle_Cp9_Boss_10")?"; Ryoshu=1 (Battle_1_1)":"");report(0,msg);return true;
 }
 static bool identity_matches(void *unit,unsigned index)
 {
@@ -665,7 +678,7 @@ static bool install(void)
  for(unsigned i=0;i<hook_count;i++)MH_QueueEnableHook(hooks[i].target);
  status=MH_ApplyQueued();
  if(status!=MH_OK){cfg->mh_status=status;report(7,"Cannot enable music hooks.");goto fail;}
- cfg->hooked=1;report(0,"Ready (0.2.0 hotfix 1): Rodion passive conversion tracking enabled.");return true;
+ cfg->hooked=1;report(0,"Ready (0.2.0 hotfix 2): Cp9 Boss 10 score initialization enabled.");return true;
 fail:
  for(unsigned i=0;i<created;i++){MH_DisableHook(hooks[i].target);MH_RemoveHook(hooks[i].target);}return false;
 }

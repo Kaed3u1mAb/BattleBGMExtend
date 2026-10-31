@@ -56,6 +56,8 @@ BattleBGMExtend 是基于[浮士德启动器（FaustLauncher）](https://github.
 
 首次安装后启用插件，通过启动器启动游戏。默认自动连接；托盘菜单提供「连接 / 恢复」「暂停」「查看状态」。规则触发后日志会显示 `BGM locked`、规则 ID 和优先级。
 
+修复版 2 为李箱使用的 `Battle_Cp9_Boss_10` 初始化 `Ryoshu=1`（`Battle_1_1`）音轨参数。该曲目的默认值 0 是静音段，单凭 FMOD 的 PLAYING 状态无法判断是否有声音。日志会显示实际曲目和已设置参数；更新后就绪日志包含 `0.2.0 hotfix 2`。
+
 安装脚本原样保留已有 `addon_info.json` 和 `rules.json`；确需用发行版规则替换已有规则时使用 `-ReplaceRules`，脚本会先保存备份。更新原生 DLL 前需要正常退出游戏。重载 Python 入口不会替换已经进入游戏进程的 DLL。
 
 ## 配置与后续规则
@@ -99,9 +101,15 @@ MinHook 的许可证随源码及安装目录中的 `THIRD_PARTY_LICENSES.txt` �
 1f31ecdbee399784e53345c4092f3dadd86e2da735ad930adcab7882d848c326
 ```
 
-已进行 Python 加载器/配置测试、真实 MinHook 的 Buff 与音乐函数 ABI 测试、优先级及清理回归检查，并离线使用本机 FMOD 音频库在 NOSOUND 模式下创建并启动全部 9 首目标曲目。12 项 Python 测试及 91 项原生断言通过，另完成 50 项方法/字段核对。方法要求也核对了 dump 中的真实命名空间、参数和返回类型。
+已进行 Python 加载器/配置测试、真实 MinHook 的 Buff 与音乐函数 ABI 测试、优先级及清理回归检查，并离线使用本机 FMOD 音频库在 NOSOUND 模式下创建并启动全部 9 首目标曲目。12 项 Python 测试及 100 项原生断言通过，另完成 50 项方法/字段核对。方法要求也核对了 dump 中的真实命名空间、参数和返回类型。
 
-**尚未进行游戏内实测。** 离线检查不代表所有剧情、异想体脚本或后续游戏版本都已验证。游戏内验收建议见 [规则说明](RULES.md)，需检查三个回合条件、不同优先级覆盖和退出战斗恢复音乐。排查时可使用启动器日志中的 `[BattleBGMExtend]`、事件路径和错误方法名。
+修复版 2 另外使用独立的 NOSOUND 混音器检测实际解码输出：默认李箱曲目 PLAYING 但输出峰值为 0，设置 `Ryoshu=1` 后检测到非零 PCM 输出，罗佳曲目作为对照。结果见 [音频验证数据](docs/score-audio-validation.json)。有本机游戏资源时可复验（不向扬声器播放、不连接游戏进程、不复制音频资源）：
+
+```powershell
+python src/tests/probe_score_audio.py --game-data 'C:\Program Files (x86)\Steam\steamapps\common\Limbus Company\LimbusCompany_Data'
+```
+
+**修复版 2 尚待游戏内复测。** 离线检查不代表所有剧情、异想体脚本或后续游戏版本都已验证。游戏内验收建议见 [规则说明](RULES.md)，需检查三个回合条件、不同优先级覆盖和退出战斗恢复音乐。排查时可使用启动器日志中的 `[BattleBGMExtend]`、事件路径和错误方法名。
 
 ## 许可证状态
 

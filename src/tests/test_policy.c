@@ -17,8 +17,11 @@ static void *passive_owner;
 static int passive_calls,upgrade_calls;
 static bool upgraded_reset_seen;
 static int failed_start;
+static int parameter_calls,parameter_fail_call;
+static uintptr_t parameter_event;
 static uintptr_t released_root;
 static void *mock_fail_method;
+static void *mock_fail_once_method;
 static char last_short_name[128];
 #define CHECK(X) do{assert(X);tests++;}while(0)
 static bool yes=true,normal_buff=false;
@@ -26,6 +29,7 @@ static int buff_stack=9,previous_phase=14;
 static void *invoke(const void *m,void *obj,void **args,void **exception)
 {
  *exception=NULL;
+ if(m==mock_fail_once_method){mock_fail_once_method=NULL;*exception=(void *)1;return NULL;}
  if(m==mock_fail_method){*exception=(void *)1;return NULL;}
  if(m==(void *)31)return &model_count;
  if(m==(void *)32){assert(*(int *)args[0]==0);return unit;}
@@ -92,6 +96,12 @@ static void *string_new(const char *s){return (void *)s;}
 static int valid(uintptr_t event){return event!=0;}
 static int release(uintptr_t event){assert(event==77);releases++;return 0;}
 static int playback(uintptr_t event,int *state){assert(event);*state=play_state;return 0;}
+static int parameter(uintptr_t event,const char *name,float value,int ignore)
+{
+ assert(event&&!strcmp(name,"Ryoshu")&&value==1.0f&&ignore==1);
+ parameter_event=event;parameter_calls++;
+ return parameter_calls==parameter_fail_call?1:0;
+}
 static void original_end_mock(void *s,const void *mi){(void)s;(void)mi;assert(!cfg->locked);original_hits++;}
 static void original_set_mock(int i,const void *mi){(void)i;(void)mi;original_hits++;}
 static volatile int forwarded_args;
@@ -118,6 +128,7 @@ static void reset(void)
  suspended=busy=false;normal_buff=false;buff_stack=9;rules_valid=true;generation=2;rule_count=3;
  owned_instance=current_event=0;starts=stops=restores=releases=bank_loads=original_hits=failed_start=0;mock_fail_method=NULL;end_converts=false;round_ready=true;round_begin_hits=round_condition_hits=round_end_hits=0;
  memset(rules,0,sizeof(rules));memset(retry_after,0,sizeof(retry_after));
+ parameter_calls=parameter_fail_call=0;parameter_event=0;mock_fail_once_method=NULL;
  for(unsigned i=0;i<3;i++){
   rules[i].personality=11016;rules[i].priority=100+(int)i*100;keywords[i]=2115;
   snprintf(rules[i].id,48,"rule_%u",i);
@@ -136,6 +147,7 @@ static void setup(void)
  m_load_bank=(void *)15;m_try_create=(void *)16;m_stop_battle=(void *)17;m_stop_sound=(void *)18;
  m_start_add=(void *)19;m_stop_add=(void *)20;m_start_battle=(void *)21;m_buff_stack=(void *)22;
  k_ally=ally_class;event_valid=valid;event_release=release;event_playback=playback;
+ original_native_parameter=parameter;
  permission_tls=TlsAlloc();assert(permission_tls!=TLS_OUT_OF_INDEXES);
  original_end[0]=original_end_mock;
  original_round_begin=round_begin_mock;original_round_conditions=round_conditions_mock;original_round_end=round_end_mock;original_round_wait=round_wait_mock;
@@ -159,6 +171,24 @@ int main(void)
  reset();mock_fail_method=m_try_create;CHECK(!switch_rule(0)&&stops==0&&!own_call());
  reset();CHECK(switch_rule(0));failed_start=1;CHECK(!switch_rule(1)&&cfg->locked&&cfg->priority==100&&current_event&&cfg->error==21);
  reset();play_state=2;CHECK(!switch_rule(0)&&!cfg->locked&&restores==1);
+ /* PLAYING alone does not make this score audible. Initialize both the
+  * preflight instance and actual battle instance; fail before stopping the
+  * previous music when the parameter cannot be set. */
+ reset();strcpy(rules[0].path,"event:/BGM/Battle/Battle_Cp9_Boss_10");
+ CHECK(switch_rule(0)&&parameter_calls==2&&parameter_event==owned_instance);
+ CHECK(strstr(cfg->message,"Ryoshu=1 (Battle_1_1)")!=NULL);
+ reset();strcpy(rules[0].path,"event:/BGM/Battle/Battle_Cp9_Boss_10");parameter_fail_call=1;
+ CHECK(!switch_rule(0)&&!cfg->locked&&stops==0&&releases==1&&cfg->error==21);
+ reset();strcpy(rules[0].path,"event:/BGM/Battle/Battle_Cp9_Boss_10");parameter_fail_call=2;
+ CHECK(!switch_rule(0)&&!cfg->locked&&restores==1&&cfg->error==21);
+ reset();CHECK(switch_rule(0)&&parameter_calls==0); /* Other tracks untouched. */
+ strcpy(rules[1].path,"event:/BGM/Battle/Battle_Cp9_Boss_10");parameter_fail_call=1;
+ CHECK(!switch_rule(1)&&cfg->locked&&cfg->priority==100&&starts==1);
+ reset();strcpy(rules[0].path,"event:/BGM/Battle/Battle_Cp9_Boss_10");CHECK(switch_rule(0));
+ /* Force the new score to throw once, then reinitialize the restored score. */
+ mock_fail_once_method=m_start_add;
+ CHECK(!switch_rule(1)&&cfg->locked&&cfg->priority==100&&parameter_calls==3);
+ CHECK(parameter_event==owned_instance&&cfg->error==21);
  reset();CHECK(switch_rule(0));phase=21;CHECK(!block_game()&&!cfg->locked);
  reset();CHECK(switch_rule(0));end0(sc,NULL);CHECK(suspended&&!cfg->locked&&original_hits==1);
  reset();CHECK(switch_rule(0));cfg->heartbeat=GetTickCount()-BGM_TIMEOUT_MS-1;
